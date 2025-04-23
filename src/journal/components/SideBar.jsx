@@ -2,25 +2,22 @@ import { TurnedInNot } from '@mui/icons-material';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, Divider } from '@mui/material';
 import React from 'react';
 
-export const SideBar = ({ drawerWidth = 240 }) => {
+export const SideBar = ({ drawerWidth = 240, mobileOpen, handleDrawerToggle }) => {
   return (
-    <Box
-      component='nav'
-      sx={{ 
-        width: { sm: drawerWidth },
-        flexShrink: { sm: 0 }
-      }}
-    >
+    <>
       <Drawer
-        variant='permanent'
-        open
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile
+        }}
         sx={{
-          display: { xs: 'block' },
+          display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': { 
             boxSizing: 'border-box', 
-            width: drawerWidth,
-            overflow: 'hidden'
-          }
+            width: drawerWidth 
+          },
         }}
       >
         <Toolbar>
@@ -28,47 +25,65 @@ export const SideBar = ({ drawerWidth = 240 }) => {
             Agustín Romero
           </Typography>
         </Toolbar>
-        
         <Divider />
-        
-        <List sx={{ overflow: 'auto', height: 'calc(100vh - 64px)' }}>
+        <List>
           {['Enero', 'Febrero', 'Marzo', 'Abril'].map((text) => (
             <React.Fragment key={text}>
-              <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton sx={{
-                  px: 2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                  }
-                }}>
-                  <ListItemIcon sx={{ minWidth: '40px' }}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
                     <TurnedInNot />
                   </ListItemIcon>
-                  <Box sx={{ overflow: 'hidden' }}>
-                    <ListItemText 
-                      primary={text} 
-                      primaryTypographyProps={{ 
-                        noWrap: true,
-                        fontWeight: 'medium'
-                      }} 
-                    />
-                    <ListItemText 
-                      secondary="Nulla facilisi. Fusce lacinia laoreet nisi eu aliquet..."
-                      secondaryTypographyProps={{ 
-                        noWrap: true,
-                        variant: 'body2',
-                        color: 'text.secondary'
-                      }}
-                      sx={{ mt: 0.5 }}
-                    />
-                  </Box>
+                  <ListItemText 
+                    primary={text}
+                    secondary="Nulla facilisi. Fusce lacinia laoreet..."
+                    secondaryTypographyProps={{ noWrap: true }}
+                  />
                 </ListItemButton>
               </ListItem>
-              <Divider variant="inset" component="div" /> {/* Cambiado a div */}
+              <Divider variant="inset" component="div" />
             </React.Fragment>
           ))}
         </List>
       </Drawer>
-    </Box>
+
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', sm: 'block' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth 
+          },
+        }}
+        open
+      >
+        <Toolbar>
+          <Typography variant='h6' noWrap component='div'>
+            Agustín Romero
+          </Typography>
+        </Toolbar>
+        <Divider />
+        <List>
+          {['Enero', 'Febrero', 'Marzo', 'Abril'].map((text) => (
+            <React.Fragment key={text}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <TurnedInNot />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={text}
+                    secondary="Nulla facilisi. Fusce lacinia laoreet..."
+                    secondaryTypographyProps={{ noWrap: true }}
+                  />
+                </ListItemButton>
+              </ListItem>
+              <Divider variant="inset" component="div" />
+            </React.Fragment>
+          ))}
+        </List>
+      </Drawer>
+    </>
   );
 };
