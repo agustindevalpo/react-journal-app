@@ -1,15 +1,39 @@
-import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Link as RouterLink } from 'react-router'
+import React from 'react'
 import { Grid, TextField, Typography, Button, Link } from '@mui/material'
 import { Google } from '@mui/icons-material'
 import { AuthLayout } from '../layouts/AuthLayout'
+import { useForm } from '../../hooks'
+
+import { checkingAutentication, startGoogleSigIn } from '../../store/auth'
 
 export const LoginPage = () => {
+
+  const dispatch = useDispatch();
+
+  const { email , password , onInputChange} = useForm({
+      email: 'agustin.romero@devalpo.cl',
+      password: '123456'
+  });
+
+  const onSubmit = ( event )=>{
+     event.preventDefault();
+     dispatch( checkingAutentication() );
+     console.log( email , password );
+
+  }
+
+  const onGoogleSigIn = () =>{
+    dispatch( startGoogleSigIn() );
+    console.log("Login con Google");
+  }
+
   return (
 
     <AuthLayout title='Login'>
 
-      <form>
+      <form onSubmit={ onSubmit }>
         <Grid container spacing={2} direction="column">
           <Grid item xs={12}>
             <TextField
@@ -17,6 +41,9 @@ export const LoginPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
+              name='email'
+              value={ email }
+              onChange={ onInputChange}
             />
           </Grid>
 
@@ -26,6 +53,9 @@ export const LoginPage = () => {
               type="password"
               placeholder="Contraseña"
               fullWidth
+              name='password'
+              value={ password }
+              onChange={ onInputChange}
             />
           </Grid>
 
@@ -42,7 +72,7 @@ export const LoginPage = () => {
               }}
             >
               <Grid item xs={12} sm={6}>
-                <Button
+                <Button 
                   variant="contained"
                   fullWidth
                   type="submit"
@@ -56,6 +86,7 @@ export const LoginPage = () => {
                   variant="outlined"
                   fullWidth
                   size="large"
+                  onClick={ onGoogleSigIn }
                 >
                   <Google />
                   <Typography sx={{ ml: 1 }}>Google</Typography>
