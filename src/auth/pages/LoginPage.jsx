@@ -1,18 +1,17 @@
-import React, { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link as RouterLink } from 'react-router'
-import { useForm } from '../../hooks'
-import { Grid, TextField, Typography, Button, Link } from '@mui/material'
-import { Google } from '@mui/icons-material'
-import { AuthLayout } from '../layouts/AuthLayout'
-import { checkingAutentication, startGoogleSigIn } from '../../store/auth'
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router';
+import { useForm } from '../../hooks';
+import { Grid, TextField, Typography, Button, Link, Alert } from '@mui/material';
+import { Google } from '@mui/icons-material';
+import { AuthLayout } from '../layouts/AuthLayout';
+import { startGoogleSigIn, startLoginWithEmailPassword } from '../../store/auth';
 
 export const LoginPage = () => {
-
-  const { status } = useSelector(state => state.auth)
+  const { status, errorMessage } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
-  const isAuthenticated = useMemo(() => status === 'checking', [status]);
+  const isChecking = useMemo(() => status === 'checking', [status]);
 
   const { email, password, onInputChange } = useForm({
     email: 'agustin.romero@devalpo.cl',
@@ -21,22 +20,23 @@ export const LoginPage = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    dispatch(checkingAutentication());
-    console.log(email, password);
-
-  }
+    dispatch(startLoginWithEmailPassword({ email, password }));
+  };
 
   const onGoogleSigIn = () => {
     dispatch(startGoogleSigIn());
-    console.log("Login con Google");
-  }
+  };
 
   return (
-
     <AuthLayout title='Login'>
-
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className='animate__animated animate__fadeIn animate__faster'>
         <Grid container spacing={2} direction="column">
+          {errorMessage && (
+            <Grid item xs={12}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
+          )}
+
           <Grid item xs={12}>
             <TextField
               label="Correo"
@@ -61,7 +61,6 @@ export const LoginPage = () => {
             />
           </Grid>
 
-
           <Grid item xs={12}>
             <Grid
               container
@@ -75,18 +74,18 @@ export const LoginPage = () => {
             >
               <Grid item xs={12} sm={6}>
                 <Button
-                  disabled={isAuthenticated}
+                  disabled={isChecking}
                   variant="contained"
                   fullWidth
                   type="submit"
                   size="large"
                 >
-                  Login
+                  {isChecking ? 'Cargando...' : 'Login'}
                 </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button
-                  disabled={isAuthenticated}
+                  disabled={isChecking}
                   variant="outlined"
                   fullWidth
                   size="large"
@@ -103,15 +102,9 @@ export const LoginPage = () => {
             <Link component={RouterLink} color='inherit' to="/auth/register">
               Crear una cuenta
             </Link>
-
           </Grid>
-
         </Grid>
       </form>
-
     </AuthLayout>
-
-
-
-  )
-}
+  );
+};

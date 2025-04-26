@@ -5,7 +5,7 @@ import { ImageGallery } from '../components';
 
 export const NoteView = () => {
   return (
-    <Grid container direction="column" sx={{ mb: 1 }}>
+    <Grid container direction="column" sx={{ mb: 1 }} className='animate__animated animate__fadeIn animate__faster'>
       {/* Fila superior con fecha y botón */}
       <Grid container item justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Typography fontSize={39} fontWeight="light">

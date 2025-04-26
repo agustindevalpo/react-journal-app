@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link as RouterLink } from 'react-router'
-import { Grid, TextField, Typography, Button, Link } from '@mui/material'
+import { Grid, TextField, Typography, Button, Link, Alert } from '@mui/material'
 import { AuthLayout } from '../layouts/AuthLayout'
 import { Password } from '@mui/icons-material'
 import { useForm } from '../../hooks'
+import { useDispatch, useSelector } from 'react-redux'
+import { startCreateRegisterUser } from '../../store/auth/thunks'
 
 const formData = {
   email: 'agustin.romero@devalpo.cl',
@@ -19,25 +21,29 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
+  const dispatch = useDispatch();
+  const [formSubmited, setFormSubmited] = useState(false);
 
-  const [formSubmited, setFormSubmited] = useState(false);  
-  
-  const { displayName , email, password , onInputChange, formState, isFormValid, 
-          displayNameValid, emailValid, passwordValid  } = useForm( formData, formValidations );
+  const { status, errorMessage } = useSelector(state => state.auth);
+  const isChekingAuthentication = useMemo(() => status === 'cheking', [status]);
+
+  const { displayName, email, password, onInputChange, formState, isFormValid,
+    displayNameValid, emailValid, passwordValid } = useForm(formData, formValidations);
 
 
-  const onSubmit = ( event ) =>{
-       event.preventDefault();
-       setFormSubmited(true);
-       console.log( formState )
+  const onSubmit = (event) => {
+    event.preventDefault();
+    setFormSubmited(true);
+    if (!isFormValid) return;
+    dispatch(startCreateRegisterUser(formState));
   }
 
   return (
 
     <AuthLayout title='Crear Cuenta'>
-      <h1>FormValid: { isFormValid ? 'válido': 'incorrecto'}</h1>
+      <h1>FormValid: {isFormValid ? 'válido' : 'incorrecto'}</h1>
 
-      <form onSubmit={ onSubmit }>
+      <form onSubmit={onSubmit} className='animate__animated animate__fadeIn animate__faster'>
         <Grid container spacing={2} direction="column">
           <Grid item xs={12}>
             <TextField
@@ -46,10 +52,10 @@ export const RegisterPage = () => {
               placeholder="Agustín Romero"
               fullWidth
               name='displayName'
-              value={ displayName }
-              onChange={ onInputChange }
-              error= { !!displayNameValid && formSubmited }
-              helperText={ displayNameValid }
+              value={displayName}
+              onChange={onInputChange}
+              error={!!displayNameValid && formSubmited}
+              helperText={displayNameValid}
             />
           </Grid>
 
@@ -60,10 +66,10 @@ export const RegisterPage = () => {
               placeholder="correo@gmail.com"
               fullWidth
               name='email'
-              value={ email }
-              onChange={ onInputChange }
-              error= { !!emailValid && formSubmited  }
-              helperText={ emailValid }
+              value={email}
+              onChange={onInputChange}
+              error={!!emailValid && formSubmited}
+              helperText={emailValid}
             />
           </Grid>
 
@@ -74,10 +80,10 @@ export const RegisterPage = () => {
               placeholder="Contraseña"
               fullWidth
               name='password'
-              value={ password }
-              onChange={ onInputChange }
-              error= { !!passwordValid && formSubmited  }
-              helperText={ passwordValid }
+              value={password}
+              onChange={onInputChange}
+              error={!!passwordValid && formSubmited}
+              helperText={passwordValid}
             />
           </Grid>
 
@@ -93,8 +99,20 @@ export const RegisterPage = () => {
                 },
               }}
             >
+
+              <Grid 
+                 item xs={12} 
+                 sm={6}
+                 display={ !!errorMessage ? '' : 'none'}>
+                <Alert severity='error'>
+                  {errorMessage}
+                </Alert>
+              </Grid>
+
+
               <Grid item xs={12} sm={6}>
                 <Button
+                  disabled={isChekingAuthentication}
                   variant="contained"
                   fullWidth
                   type="submit"
@@ -107,7 +125,7 @@ export const RegisterPage = () => {
           </Grid>
 
           <Grid container direction="row" justifyContent='end'>
-            <Typography sx={{ mr:1 }}>¿Ya tienes cuenta?</Typography>
+            <Typography sx={{ mr: 1 }}>¿Ya tienes cuenta?</Typography>
             <Link component={RouterLink} color='inherit' to="/auth/login">
               Ingresar
             </Link>
