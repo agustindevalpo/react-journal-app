@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { startLogOut } from '../../store/auth/thunks';
 
 export const NavBar = ({ drawerWidth, handleDrawerToggle }) => {
+
   const dispatch = useDispatch();
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
@@ -47,10 +48,10 @@ export const NavBar = ({ drawerWidth, handleDrawerToggle }) => {
             component='div' 
             sx={{ flexGrow: 1 }}
           >
-            Journal App
+            Devalpo Notas APP
           </Typography>
 
-          <IconButton color='error' onClick={handleOpenLogoutDialog}>
+          <IconButton color='custom' onClick={handleOpenLogoutDialog}>
             <LogoutOutlined />
           </IconButton>
         </Toolbar>
@@ -81,3 +82,7 @@ export const NavBar = ({ drawerWidth, handleDrawerToggle }) => {
     </>
   );
 };
+
+
+
+
