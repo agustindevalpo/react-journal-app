@@ -111,7 +111,7 @@ export const NoteView = () => {
             <Button
               component="label"
               variant="outlined"
-              color="primary"
+              color="custom"
               startIcon={isUploading ? <CircularProgress size={20} /> : <CloudUploadOutlined />}
               disabled={isSaving || isUploading}
               sx={{

@@ -16,7 +16,7 @@ export const NothingSelectedView = () => {
         >
 
             <Grid item xs={ 12 }>
-               <StarOutline sx= {{ fontSize: 100 , color: 'white'}}/>
+               <StarOutline sx= {{ fontSize: 100 , color: 'custom.orange'}}/>
             </Grid>
 
             <Grid item xs={ 12 }>
