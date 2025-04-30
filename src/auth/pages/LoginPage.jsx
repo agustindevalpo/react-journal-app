@@ -1,11 +1,17 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router';
-import { useForm } from '../../hooks';
 import { Grid, TextField, Typography, Button, Link, Alert } from '@mui/material';
 import { Google } from '@mui/icons-material';
+import { useForm } from '../../hooks';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { startGoogleSigIn, startLoginWithEmailPassword } from '../../store/auth';
+
+
+const formData = {
+  email: '',
+  password: ''
+}
 
 export const LoginPage = () => {
   const { status, errorMessage } = useSelector(state => state.auth);
@@ -13,10 +19,7 @@ export const LoginPage = () => {
 
   const isChecking = useMemo(() => status === 'checking', [status]);
 
-  const { email, password, onInputChange } = useForm({
-    email: 'agustin.romero@devalpo.cl',
-    password: '123456'
-  });
+  const { email, password, onInputChange } = useForm(formData);
 
   const onSubmit = (event) => {
     event.preventDefault();
