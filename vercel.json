@@ -3,13 +3,42 @@
     "builds": [
       {
         "src": "package.json",
-        "use": "@vercel/static-build"
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist",
+          "cleanUrls": true
+        }
       }
     ],
     "routes": [
       {
+        "src": "/assets/(.*)",
+        "dest": "/assets/$1",
+        "headers": {
+          "Content-Type": {
+            ".js": "application/javascript",
+            ".css": "text/css"
+          },
+          "Cache-Control": "public, max-age=31536000, immutable"
+        }
+      },
+      {
         "src": "/(.*)",
-        "dest": "/index.html"
+        "dest": "/index.html",
+        "headers": {
+          "Content-Type": "text/html"
+        }
+      }
+    ],
+    "headers": [
+      {
+        "source": "/assets/(.*)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
       }
     ]
   }
